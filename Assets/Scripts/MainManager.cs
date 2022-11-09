@@ -57,7 +57,9 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                //TODO: save score under name, replace name if already exists
+                // save player score for name
+                DataManager.Instance.SaveScore(m_Points);
+
                 //TODO: load menu scene instead of reloading current one
                 SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
             }
