@@ -7,10 +7,11 @@ using UnityEngine.UI;
 public class MainManager : MonoBehaviour
 {
     public Brick BrickPrefab;
-    public int LineCount = 6;
+    public int lineCount = 6;
     public Rigidbody Ball;
 
-    public Text ScoreText;
+    public Text scoreText;
+    public Text bestScoreText;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -26,7 +27,7 @@ public class MainManager : MonoBehaviour
         int perLine = Mathf.FloorToInt(4.0f / step);
         
         int[] pointCountArray = new [] {1,1,2,2,5,5};
-        for (int i = 0; i < LineCount; ++i)
+        for (int i = 0; i < lineCount; ++i)
         {
             for (int x = 0; x < perLine; ++x)
             {
@@ -36,6 +37,12 @@ public class MainManager : MonoBehaviour
                 brick.onDestroyed.AddListener(AddPoint);
             }
         }
+
+        //init best score and player name on UI
+        string playerName = DataManager.Instance.playerName;
+        var scores = DataManager.Instance.LoadScores();
+        int playerTopScore = scores.GetScoreForPlayer(playerName);
+        bestScoreText.text = "Best Score: " + playerName + " : " + playerTopScore;
     }
 
     private void Update()
@@ -57,11 +64,12 @@ public class MainManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                // save player score for name
+                // save player score
+                DataManager.Instance.lastScore = m_Points;
                 DataManager.Instance.SaveScore(m_Points);
 
-                //TODO: load menu scene instead of reloading current one
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+                // load menu scene
+                SceneManager.LoadScene(0);
             }
         }
     }
@@ -69,7 +77,7 @@ public class MainManager : MonoBehaviour
     void AddPoint(int point)
     {
         m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        scoreText.text = $"Score : {m_Points}";
     }
 
     public void GameOver()

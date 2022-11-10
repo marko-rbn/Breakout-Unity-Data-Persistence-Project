@@ -8,7 +8,8 @@ public class DataManager : MonoBehaviour
 
     public static DataManager Instance;
 
-    public string playerName;  //preserve player's name and score between scenes
+    public string playerName;  //preserve player's name
+    public int lastScore = 0;  //preserve player's last score
 
     private static string filePath;
 
@@ -50,32 +51,57 @@ public class DataManager : MonoBehaviour
         }
     }
 
-    [System.Serializable]
-    public class SaveData
-    {
-        public List<PlayerData> scores;
+}
 
-        // add or update a score associated with name
-        public void AddOrUpdate(string name, int score)
+
+[System.Serializable]
+public class SaveData
+{
+    public List<PlayerData> scores;
+
+    // add or update a score associated with name
+    public void AddOrUpdate(string name, int score)
+    {
+        int index = scores.FindIndex(x => x.name == name);
+        if (index == -1)
         {
-            int index = scores.FindIndex(x => x.name == name);
-            if (index == -1)
-            {
-                // name not found - add a new item to the list
-                scores.Add(new PlayerData() { name = name, score = score });
-            }
-            else
-            {
-                // name found - add new score, only if score is better than recorded
-                if (scores[index].score < score) { scores[index].score = score; }
-            }
+            // name not found - add a new item to the list
+            scores.Add(new PlayerData() { name = name, score = score });
+        }
+        else
+        {
+            // name found - add new score, only if score is better than recorded
+            if (scores[index].score < score) { scores[index].score = score; }
         }
     }
 
-    [System.Serializable]
-    public class PlayerData
+    public int GetScoreForPlayer(string name)
     {
-        public string name;
-        public int score;
+        int index = scores.FindIndex(x => x.name == name);
+        if (index == -1)
+        {
+            return 0;
+        } else
+        {
+            return scores[index].score;
+        }
     }
+
+    //returns top score player data record or null if no scores yet recorded
+    public PlayerData GetTopScore()
+    {
+        PlayerData top = null;
+        foreach (PlayerData pd in scores)
+        {
+            if (top == null || pd.score > top.score) top = pd;
+        }
+        return top;
+    }
+}
+
+[System.Serializable]
+public class PlayerData
+{
+    public string name;
+    public int score;
 }

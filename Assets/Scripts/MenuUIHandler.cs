@@ -16,13 +16,52 @@ public class MenuUIHandler : MonoBehaviour
     //public ColorPicker ColorPicker;
     public TMP_Text nameWarning;
     public TMP_InputField nameInput;
+    public TMP_Text bestestScore;  //top score of any player
+    public TMP_Text bestScore;  // best score for player
+    public TMP_Text lastScore;  // last play score
+
 
     private void Start()
     {
         nameWarning.gameObject.SetActive(false);
-        //TODO: load high scores file, display maximum score
-        //TODO: display current player's top score
+
+        // set name if already known
+        string playerName = "";
+        playerName = DataManager.Instance.playerName ?? "";
+        nameInput.text = playerName;
+
+        // load high scores file, display maximum score
+        SaveData scores = DataManager.Instance.LoadScores();
+        PlayerData top = scores.GetTopScore();
+        if (top == null)
+        {
+            bestestScore.gameObject.SetActive(false);
+        }
+        else
+        {
+            bestestScore.text = "Bestest High Score: " + top.name + " : " + top.score;
+        }
+
+        // display current player's top score
+        int playerTopScore = scores.GetScoreForPlayer(playerName);
+        if (playerTopScore == 0)
+        {
+            bestScore.gameObject.SetActive(false);
+        } else
+        {
+            bestScore.text = "Your Best Score: " + playerTopScore;
+        }
+
         //TODO: display current player's latest score
+        if (DataManager.Instance.lastScore == 0)
+        {
+            lastScore.gameObject.SetActive(false);
+        }
+        else
+        {
+            lastScore.text = "Your Last Score: " + DataManager.Instance.lastScore;
+        }
+
     }
 
     public void StartNew()
