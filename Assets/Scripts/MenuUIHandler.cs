@@ -79,6 +79,11 @@ public class MenuUIHandler : MonoBehaviour
         }
     }
 
+    public void ShowTopScores()
+    {
+        SceneManager.LoadScene(2);
+    }
+
     public void Exit()
     {
 #if UNITY_EDITOR
