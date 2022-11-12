@@ -10,6 +10,7 @@ public class DeathZone : MonoBehaviour
     private void OnCollisionEnter(Collision other)
     {
         Destroy(other.gameObject);
+        GetComponent<AudioSource>().Play();
         Manager.GameOver();
     }
 }

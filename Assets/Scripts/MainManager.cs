@@ -13,6 +13,8 @@ public class MainManager : MonoBehaviour
     public Text scoreText;
     public Text bestScoreText;
     public GameObject GameOverText;
+
+    public int brickCount;
     
     private bool m_Started = false;
     private int m_Points;
@@ -25,7 +27,8 @@ public class MainManager : MonoBehaviour
     {
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
-        
+        brickCount = lineCount * perLine;
+
         int[] pointCountArray = new [] {1,1,2,2,5,5};
         for (int i = 0; i < lineCount; ++i)
         {

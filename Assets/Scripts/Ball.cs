@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    public AudioClip wallHitSound;
+    public AudioClip paddleHitSound;
+
     private Rigidbody m_Rigidbody;
 
     void Start()
@@ -32,5 +35,8 @@ public class Ball : MonoBehaviour
         }
 
         m_Rigidbody.velocity = velocity;
+
+        //TODO: play sound - if other is wall or paddle
+        GetComponent<AudioSource>().PlayOneShot(other.gameObject.CompareTag("Wall") ? wallHitSound : paddleHitSound);
     }
 }
